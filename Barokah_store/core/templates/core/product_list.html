@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+  Etalase Produk
+{% endblock %}
+
+{% block content %}
+  <h1 class="mb-4 text-center">Produk Kami</h1>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for product in products %}
+      <div class="col">
+        <div class="card h-100">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" />
+          {% else %}
+            <img src="https://via.placeholder.com/400x300.png?text=No+Image" class="card-img-top" alt="Placeholder" />
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text">{{ product.description }}</p>
+            <p class="card-text fw-bold">Rp {{ product.price }}</p>
+          </div>
+          <div class="card-footer d-flex justify-content-between">
+            <a href="{% url 'product_detail' product.id %}" class="btn btn-secondary flex-grow-1 me-2">Detail</a>
+            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary flex-grow-1">Keranjang</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

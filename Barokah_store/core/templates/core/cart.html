@@ -1,0 +1,50 @@
+{% extends "core/base.html" %}
+
+{% block title %}Keranjang Belanja{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Keranjang Belanja</h1>
+    {% if cart_items %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Produk</th>
+                    <th scope="col">Harga</th>
+                    <th scope="col">Jumlah</th>
+                    <th scope="col">Subtotal</th>
+                    <th scope="col">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                    <tr>
+                        <td>
+                            {% if item.image %}
+                                <img src="{{ item.image }}" alt="{{ item.name }}" style="width: 50px; height: 50px;">
+                            {% endif %}
+                            {{ item.name }}
+                        </td>
+                        <td>Rp {{ item.price }}</td>
+                        <td>
+                            <form method="post" action="{% url 'update_cart' item.product_id %}">
+                                {% csrf_token %}
+                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control" style="width: 70px;">
+                                <button type="submit" class="btn btn-sm btn-info mt-1">Perbarui</button>
+                            </form>
+                        </td>
+                        <td>Rp {{ item.subtotal }}</td>
+                        <td>
+                            <a href="{% url 'remove_from_cart' item.product_id %}" class="btn btn-danger btn-sm">Hapus</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="text-end">
+            <h4>Total: Rp {{ total_price }}</h4>
+            <a href="{% url 'checkout' %}" class="btn btn-success">Checkout</a>
+        </div>
+    {% else %}
+        <p>Keranjang belanja Anda kosong.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "core/base.html" %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+    <h2 class="mb-4">Checkout</h2>
+    {% if not cart_items %}
+        <div class="alert alert-warning" role="alert">
+            Keranjang belanja Anda kosong. Silakan tambahkan produk terlebih dahulu.
+            <a href="{% url 'product_list' %}" class="alert-link">Kembali ke beranda</a>.
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Detail Pesanan</h4>
+                <ul class="list-group mb-3">
+                    {% for item in cart_items %}
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">{{ item.name }}</h6>
+                                <small class="text-muted">Jumlah: {{ item.quantity }}</small>
+                            </div>
+                            <span class="text-muted">Rp {{ item.subtotal }}</span>
+                        </li>
+                    {% endfor %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Total (Rupiah)</span>
+                        <strong>Rp {{ total_price }}</strong>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h4>Pembayaran Manual</h4>
+                <p>Silakan transfer ke rekening: <strong>123-456-7890 (Bank ABC)</strong> atas nama Toko XYZ.</p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="payment_proof" class="form-label">Upload Bukti Pembayaran</label>
+                        <input class="form-control" type="file" id="payment_proof" name="payment_proof" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Selesaikan Pembayaran</button>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

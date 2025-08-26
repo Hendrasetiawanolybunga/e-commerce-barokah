@@ -1,0 +1,11 @@
+{% extends "core/base.html" %}
+
+{% block title %}Pesanan Berhasil{% endblock %}
+
+{% block content %}
+    <div class="container mt-5 text-center">
+        <h2 class="text-success">Pesanan Berhasil Dibuat! 🎉</h2>
+        <p>Terima kasih telah berbelanja. Nomor pesanan Anda adalah <strong>#{{ order_id }}</strong>. Admin akan segera memproses pesanan Anda setelah memverifikasi pembayaran.</p>
+        <a href="{% url 'product_list' %}" class="btn btn-primary mt-3">Kembali ke Beranda</a>
+    </div>
+{% endblock %}

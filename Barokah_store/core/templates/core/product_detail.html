@@ -1,0 +1,72 @@
+{% extends "core/base.html" %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
+            {% else %}
+                <img src="https://via.placeholder.com/600x400.png?text=No+Image" class="img-fluid rounded" alt="Placeholder">
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h1>{{ product.name }}</h1>
+            <p class="lead fw-bold">Rp {{ product.price }}</p>
+            <p>{{ product.description }}</p>
+            <hr>
+            <div class="d-flex">
+                <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary me-2">Tambah ke Keranjang</a>
+                <a href="{% url 'cart' %}" class="btn btn-secondary">Lihat Keranjang</a>
+            </div>
+        </div>
+    </div>
+    <hr class="my-5">
+    
+    <h3>Ulasan Produk</h3>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h4>Berikan Ulasan Anda</h4>
+    {% if user.is_authenticated %}
+        <form method="post">
+            {% csrf_token %}
+            {{ review_form.as_p }}
+            <button type="submit" class="btn btn-success">Kirim Ulasan</button>
+        </form>
+    {% else %}
+        <p>Silakan <a href="{% url 'login' %}">login</a> untuk memberikan ulasan.</p>
+    {% endif %}
+    
+    <hr class="my-4">
+    
+    {% if reviews %}
+        {% for review in reviews %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ review.user.username }}</h5>
+                    <p class="card-text">
+                        Rating: 
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= review.rating %}
+                                <i class="fas fa-star text-warning"></i>
+                            {% else %}
+                                <i class="far fa-star text-warning"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                    <p class="card-text">{{ review.comment }}</p>
+                    <small class="text-muted">Tanggal: {{ review.created_at|date:"d M Y" }}</small>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Belum ada ulasan untuk produk ini.</p>
+    {% endif %}
+{% endblock %}
